@@ -131,6 +131,119 @@ class Composer:
         return [acordesCompleto, melodyGenerated]
 
 
+    def composePhraseC(self, composerName, tonality, mode, firstH, secondH, firstR, secondR, cadence, rhythmPhrase, anacruse):
+        dt = datetime.now()
+        random.seed(dt.microsecond)
+        fio = fileIO.FileIO()
+        h = Harmony()
+        rt = Rhythm()
+        ml = Melody()
+        iteration = 0
+
+        #De momento solo funciona en 4 por 4
+        beats_per_measure = 4
+        #Longitud en compases de la frase
+        fraseLenght = 8
+        semifraseLenght = int(fraseLenght / 2)
+        ritmoLenght = int(beats_per_measure * fraseLenght / 4)
+
+        durationChord = "quarter"
+        if durationChord == "whole":
+            numberOfChords = int(1 * semifraseLenght)
+        elif durationChord == "half":
+            numberOfChords = int(2 * semifraseLenght)
+        elif durationChord == "quarter":
+            numberOfChords = int(4 * semifraseLenght)
+        elif durationChord == "eight":
+            numberOfChords = int(8 * semifraseLenght)
+
+        fio.getFileNames(composerName, mode)
+
+        unigram = fio.load_obj(fio.getFileNames(composerName, mode)[5])
+        bigram = fio.load_obj(fio.getFileNames(composerName, mode)[1])
+        bigram_R = fio.load_obj(fio.getFileNames(composerName, "R")[1])
+        trigram = fio.load_obj(fio.getFileNames(composerName, mode)[2])
+        trigram_R = fio.load_obj(fio.getFileNames(composerName, "R")[2])
+
+        unigram_s = sorted(unigram.items(), key=operator.itemgetter(1), reverse=True)
+        cadenceOK = False
+
+        iteration = 0
+        while not cadenceOK:
+            chords_A1 = h.getHarmony_from_Trigram(trigram, bigram, tonality, firstH, numberOfChords, durationChord)
+            if "v" in chords_A1[1][-1].lower():
+                cadenceOK = True
+            elif "iv" in chords_A1[1][-1].lower():
+                cadenceOK = True
+            if "vi" in chords_A1[1][-1].lower():
+                cadenceOK = True
+            iteration +=1
+            if iteration == 1000: raise Exception("Error in the process: to many trials")
+
+        iteration = 0
+        cadenceOK = False
+        while not cadenceOK:
+            chords_A2 = h.getHarmony_from_Trigram(trigram, bigram, tonality, secondH, numberOfChords, durationChord)
+            if cadence=="perfect":
+                if "v" in chords_A2[1][-2].lower() and "i" == chords_A2[1][-1].lower():
+                    cadenceOK = True
+            elif cadence=="plagale":
+                if "iv" in chords_A2[1][-2].lower() and "i" == chords_A2[1][-1].lower():
+                    cadenceOK = True
+            elif cadence=="broken":
+                if "v" in chords_A2[1][-2].lower() and "vi" in chords_A2[1][-1].lower():
+                    cadenceOK = True
+            elif cadence=="semicadence":
+                if ("i" in chords_A2[1][-2].lower() or "iv" in chords_A2[1][-2].lower() or "iv" in chords_A2[1][-2].lower() or "vi" in chords_A2[1][-2].lower()) and "v" in chords_A2[1][-1].lower():
+                    cadenceOK = True
+            iteration +=1
+            if iteration == 1000: raise Exception("Error in the process: to many trials")
+
+        rimto1 = None
+        iteration = 0
+        while (rimto1 is None):
+            rimto1 = rt.getRhythm_from_Trigram(trigram_R, firstR, secondR, ritmoLenght, anacruse, 0)
+            iteration +=1
+            if iteration == 100: raise Exception("Error in the process: to many trials")
+
+        rimto1b = None
+        iteration = 0
+        while (rimto1b is None):
+            rimto1b = rt.getRhythm_from_Trigram(trigram_R, firstR, secondR, ritmoLenght, False, 1.0)
+            iteration +=1
+            if iteration == 100: raise Exception("Error in the process: to many trials")
+
+        rimto1c = None
+        iteration = 0
+        while (rimto1c is None):
+            rimto1c = rt.getRhythm_from_Trigram(trigram_R, firstR, secondR, ritmoLenght, False, 2.0)
+            iteration +=1
+            if iteration == 100: raise Exception("Error in the process: to many trials")
+
+        ritmoCompleto = []
+        if rhythmPhrase == "":
+            for r in rimto1[0]:
+                ritmoCompleto.append(r)
+            for r in rimto1b[0]:
+                ritmoCompleto.append(r)
+            for r in rimto1[0]:
+                ritmoCompleto.append(ml.cloneFigure(r))
+            for r in rimto1c[0]:
+                ritmoCompleto.append(r)
+        else:
+            for r in rhythmPhrase:
+                ritmoCompleto.append(ml.cloneFigure(r))
+
+        acordesCompleto = []
+        for c in chords_A1[0]:
+            acordesCompleto.append(c)
+        for c in chords_A2[0]:
+            acordesCompleto.append(c)
+
+        melodyGenerated = ml.rhythm_to_Melody(ritmoCompleto, acordesCompleto)
+        print(str(chords_A1[1]) + str(chords_A2[1]))
+        return [acordesCompleto, melodyGenerated, ritmoCompleto]
+
 
     def composePhraseChoral(self, composerName, tonality, mode):
         dt = datetime.now()
@@ -236,30 +349,35 @@ class Composer:
         inicioA = random.choice(inicios)
         inicioB = random.choice(inicios)
 
-        acordes = [["I7", "v"], ["i", "iii7"], ["v7", "v"], ["v", "ii7"], ["I7", "ii7"], ["i", "v"], ["ii7", "i"], ["v", "v7"] ]
+        acordes = [["I7", "v"], ["i", "iii7"], ["i", "v"], ["I7", "ii7"], ["I7", "ii7"], ["i", "v"], ["i", "i"], ["v", "v7"] ]
         acordesA = random.choice(acordes)
         acordesB = random.choice(acordes)
 
-        seccionA = self.composePhrase(composerName, tonality, mode, acordesA[0], acordesA[1], inicioA[0], inicioA[1], True)
-        seccionB = self.composePhrase(composerName, key.Key('G'), mode, acordesB[0], acordesB[1], inicioB[0], inicioB[1], True)
+        seccionA1 = self.composePhraseC(composerName, tonality, mode, acordesA[0], acordesA[1], inicioA[0], inicioA[1], random.choice(["semicadence", "broken"]), "", True)
+        seccionB = self.composePhraseC(composerName, key.Key('G'), mode, acordesB[0], acordesB[1], inicioB[0], inicioB[1], random.choice(["perfect", "plagale"]), "", True)
+        seccionA2 = self.composePhraseC(composerName, tonality, mode, acordesA[0], acordesA[1], inicioA[0], inicioA[1], "perfect", seccionA1[2], True)
 
         acordesCompleto = []
-        for c in seccionA[0]:
+        for c in seccionA1[0]:
             acordesCompleto.append(c)
         for c in seccionB[0]:
             acordesCompleto.append(c)
-        for c in seccionA[0]:
-            acordesCompleto.append(ml.cloneFigure(c))
+##        for c in seccionA1[0]:
+##            acordesCompleto.append(ml.cloneFigure(c))
+        for c in seccionA2[0]:
+            acordesCompleto.append(c)
+
 
 
         notasCompleto = []
-        for c in seccionA[1]:
+        for c in seccionA1[1]:
             notasCompleto.append(c)
         for c in seccionB[1]:
             notasCompleto.append(c)
-        for c in seccionA[1]:
-            notasCompleto.append(ml.cloneFigure(c))
-
+##        for c in seccionA[1]:
+##            notasCompleto.append(ml.cloneFigure(c))
+        for c in seccionA2[1]:
+            notasCompleto.append(c)
         return [acordesCompleto, notasCompleto]
 
 

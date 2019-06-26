@@ -18,12 +18,13 @@ import parsing
 
 
 comp = composer.Composer()
-for i in range(100):
+for i in range(10):
     try:
 ##        res = comp.composeABA_bach(key.Key('C'), "major")
-        res = comp.composePhraseChoral("bach", key.Key('C'), "major")
+##        res = comp.composePhraseChoral("bach", key.Key('C'), "major")
+        res = comp.composeABA_jazz(key.Key('C'), "major")
         sco = comp.generateScore(res[0], res[1], key.Key('C'))
-        sco.write("xml", fp="D:\\BackUpDrive\\Documentos\\Masters\\Master IA UNED\\TFM\\Codigo\\results\\bach\\bach" + str(i) + ".xml" )
+##        sco.write("xml", fp="D:\\BackUpDrive\\Documentos\\Masters\\Master IA UNED\\TFM\\Codigo\\results\\bach\\bach" + str(i) + ".xml" )
         sco.show()
         print("Generando..." + str(i))
     except Exception as e:
