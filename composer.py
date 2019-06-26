@@ -394,26 +394,26 @@ class Composer:
         acordesA = random.choice(acordes)
         acordesB = random.choice(acordes)
 
-        seccionA = self.composePhrase(composerName, tonality, mode, acordesA[0], acordesA[1], inicioA[0], inicioA[1], True)
-        seccionB = self.composePhrase(composerName, key.Key('G'), mode, acordesB[0], acordesB[1], inicioB[0], inicioB[1], True)
+        seccionA1 = self.composePhraseC(composerName, tonality, mode, acordesA[0], acordesA[1], inicioA[0], inicioA[1], random.choice(["semicadence", "broken"]), "", random.choice([True, False]))
+        seccionB = self.composePhraseC(composerName, key.Key('G'), mode, acordesB[0], acordesB[1], inicioB[0], inicioB[1], random.choice(["perfect", "plagale"]), "", random.choice([True, False]))
+        seccionA2 = self.composePhraseC(composerName, tonality, mode, acordesA[0], acordesA[1], inicioA[0], inicioA[1], "perfect", seccionA1[2], random.choice([True, False]))
 
         acordesCompleto = []
-        for c in seccionA[0]:
+        for c in seccionA1[0]:
             acordesCompleto.append(c)
         for c in seccionB[0]:
             acordesCompleto.append(c)
-        for c in seccionA[0]:
-            acordesCompleto.append(ml.cloneFigure(c))
+        for c in seccionA2[0]:
+            acordesCompleto.append(c)
 
 
         notasCompleto = []
-        for c in seccionA[1]:
+        for c in seccionA1[1]:
             notasCompleto.append(c)
         for c in seccionB[1]:
             notasCompleto.append(c)
-        for c in seccionA[1]:
-            notasCompleto.append(ml.cloneFigure(c))
-
+        for c in seccionA2[1]:
+            notasCompleto.append(c)
         return [acordesCompleto, notasCompleto]
 
 
@@ -429,26 +429,26 @@ class Composer:
         acordesA = random.choice(acordes)
         acordesB = random.choice(acordes)
 
-        seccionA = self.composePhrase(composerName, tonality, mode, acordesA[0], acordesA[1], inicioA[0], inicioA[1], random.choice([True, False]))
-        seccionB = self.composePhrase(composerName, key.Key('F'), mode, acordesB[0], acordesB[1], inicioB[0], inicioB[1], random.choice([True, False]))
+        seccionA1 = self.composePhraseC(composerName, tonality, mode, acordesA[0], acordesA[1], inicioA[0], inicioA[1], random.choice(["semicadence", "broken"]), "", random.choice([True, False]))
+        seccionB = self.composePhraseC(composerName, key.Key('G'), mode, acordesB[0], acordesB[1], inicioB[0], inicioB[1], random.choice(["perfect", "plagale"]), "", random.choice([True, False]))
+        seccionA2 = self.composePhraseC(composerName, tonality, mode, acordesA[0], acordesA[1], inicioA[0], inicioA[1], "perfect", seccionA1[2], random.choice([True, False]))
 
         acordesCompleto = []
-        for c in seccionA[0]:
+        for c in seccionA1[0]:
             acordesCompleto.append(c)
         for c in seccionB[0]:
             acordesCompleto.append(c)
-        for c in seccionA[0]:
-            acordesCompleto.append(ml.cloneFigure(c))
+        for c in seccionA2[0]:
+            acordesCompleto.append(c)
 
 
         notasCompleto = []
-        for c in seccionA[1]:
+        for c in seccionA1[1]:
             notasCompleto.append(c)
         for c in seccionB[1]:
             notasCompleto.append(c)
-        for c in seccionA[1]:
-            notasCompleto.append(ml.cloneFigure(c))
-
+        for c in seccionA2[1]:
+            notasCompleto.append(c)
         return [acordesCompleto, notasCompleto]
 
 
@@ -465,26 +465,26 @@ class Composer:
         acordesA = random.choice(acordes)
         acordesB = random.choice(acordes)
 
-        seccionA = self.composePhrase(composerName, tonality, mode, acordesA[0], acordesA[1], inicioA[0], inicioA[1], True)
-        seccionB = self.composePhrase(composerName, key.Key('G'), mode, acordesB[0], acordesB[1], inicioB[0], inicioB[1], True)
+        seccionA1 = self.composePhraseC(composerName, tonality, mode, acordesA[0], acordesA[1], inicioA[0], inicioA[1], random.choice(["semicadence", "broken"]), "", random.choice([True, False]))
+        seccionB = self.composePhraseC(composerName, key.Key('G'), mode, acordesB[0], acordesB[1], inicioB[0], inicioB[1], random.choice(["perfect", "plagale"]), "", random.choice([True, False]))
+        seccionA2 = self.composePhraseC(composerName, tonality, mode, acordesA[0], acordesA[1], inicioA[0], inicioA[1], "perfect", seccionA1[2], random.choice([True, False]))
 
         acordesCompleto = []
-        for c in seccionA[0]:
+        for c in seccionA1[0]:
             acordesCompleto.append(c)
         for c in seccionB[0]:
             acordesCompleto.append(c)
-        for c in seccionA[0]:
-            acordesCompleto.append(ml.cloneFigure(c))
+        for c in seccionA2[0]:
+            acordesCompleto.append(c)
 
 
         notasCompleto = []
-        for c in seccionA[1]:
+        for c in seccionA1[1]:
             notasCompleto.append(c)
         for c in seccionB[1]:
             notasCompleto.append(c)
-        for c in seccionA[1]:
-            notasCompleto.append(ml.cloneFigure(c))
-
+        for c in seccionA2[1]:
+            notasCompleto.append(c)
         return [acordesCompleto, notasCompleto]
 
 
@@ -500,30 +500,27 @@ class Composer:
         acordesA = random.choice(acordes)
         acordesB = random.choice(acordes)
 
-        seccionA = self.composePhrase(composerName, tonality, mode, acordesA[0], acordesA[1], inicioA[0], inicioA[1], False)
-        seccionB = self.composePhrase(composerName, key.Key('G'), mode, acordesB[0], acordesB[1], inicioB[0], inicioB[1], False)
+        seccionA1 = self.composePhraseC(composerName, tonality, mode, acordesA[0], acordesA[1], inicioA[0], inicioA[1], random.choice(["semicadence", "broken"]), "", random.choice([True, False]))
+        seccionB = self.composePhraseC(composerName, key.Key('G'), mode, acordesB[0], acordesB[1], inicioB[0], inicioB[1], random.choice(["perfect", "plagale"]), "", random.choice([True, False]))
+        seccionA2 = self.composePhraseC(composerName, tonality, mode, acordesA[0], acordesA[1], inicioA[0], inicioA[1], "perfect", seccionA1[2], random.choice([True, False]))
 
         acordesCompleto = []
-        for c in seccionA[0]:
+        for c in seccionA1[0]:
             acordesCompleto.append(c)
         for c in seccionB[0]:
             acordesCompleto.append(c)
-        for c in seccionA[0]:
-            acordesCompleto.append(ml.cloneFigure(c))
+        for c in seccionA2[0]:
+            acordesCompleto.append(c)
 
 
         notasCompleto = []
-        for c in seccionA[1]:
+        for c in seccionA1[1]:
             notasCompleto.append(c)
         for c in seccionB[1]:
             notasCompleto.append(c)
-        for c in seccionA[1]:
-            notasCompleto.append(ml.cloneFigure(c))
-
+        for c in seccionA2[1]:
+            notasCompleto.append(c)
         return [acordesCompleto, notasCompleto]
-
-
-
 
 
 
